@@ -101,6 +101,13 @@ def viewUsers():
     else:
         return None
 
+def viewUsersByID(id):
+    users = dict(db.Users.find_one({'_id': ObjectId(id)}))
+    stringify_object_id(users)
+    if users:
+        return users
+    else:
+        return None
 
 def viewBookings(email):
     plans = list(db.Planners.find({'email': email}))
@@ -119,75 +126,53 @@ def viewDriverBookings(email):
         return None
 
 
-def viewDriversByEmail(email, driver=False, client=False, admin=False):
-    if driver:
-        drivers = dict(db.Drivers.find({'email': email}))
-        if drivers:
-            return drivers
-        else:
-            return None
-    elif client:
-        drivers = dict(db.Clients.find({'email': email}))
-        if drivers:
-            return drivers
-        else:
-            return None
-    elif admin:
-        drivers = dict(db.Admins.find({'email': email}))
-        if drivers:
-            return drivers
-        else:
-            return None
 
-def createAdmin(details):
-    check_details = db.Admins.find_one({'email': details['Email']})
-    if check_details is None:
-        return db.Clients.insert_one({
-            'username': details['Username'],
-            'email': details['Email'],
-            'password': details['Password']
-        })
-    else:
-        return db.Clients.update_one(
-            {
-                'email': details['Email']
+def updatePlanuser(details):
+    return db.Users.update_one(
+        {
+            '_id': ObjectId(details['_id'])
 
-            },
-            {
-                "$set": {
-                    'username': details['Username'],
-                }
+        },
+        {
+            "$set": {
+                'firstName': details['FirstName'],
+                'lastName': details['LastName'],
+                'age': details['Age'],
+                'gender': details['Gender'],
+                'address': details['Address'],
+                'email': details['Email'],
+                'password': details['Password']
             }
-        )
+        }
+    )
 
-def createPlanUser(details):
-    check_details = db.Clients.find_one({'email': details['Email']})
-    if check_details is None:
-        return db.Clients.insert_one({
-            'firstName': details['FirstName'],
-            'lastName': details['LastName'],
-            'age': details['Age'],
-            'gender': details['Gender'],
-            'address': details['Address'],
-            'email': details['Email'],
-            'password': details['Password'],
-        })
-    else:
-        return db.Clients.update_one(
-            {
-                'email': details['Email']
+def updateDriverUser(details):
+    db.Users.update_one(
+        {
+            '_id': ObjectId(details['_id'])
 
-            },
-            {
-                "$set": {
-                    'firstName': details['FirstName'],
-                    'lastName': details['LastName'],
-                    'age': details['Age'],
-                    'gender': details['Gender'],
-                    'address': details['Address'],
-                }
+        },
+        {
+            "$set": {
+                'firstName': details['FirstName'],
+                'lastName': details['LastName'],
+                'age': details['Age'],
+                'gender': details['Gender'],
+                'address': details['Address'],
+                'vType': details['vType'],
+                'carName': details['carName'],
+                'license': details['license'],
+                'number': details['number'],
+                'email': details['Email'],
+                'password': details['Password']
             }
-        )
+        }
+    )
+
+def deletePlanUser(id):
+    return db.Users.delete_one({
+        '_id': ObjectId(id)
+    })
 
 def createPlan(details):
     return db.Planners.insert_one({
@@ -214,6 +199,7 @@ def updatePlan(details):
             }
         }
     )
+
 def deletePlan(details):
     return db.Planners.delete_one(
         {

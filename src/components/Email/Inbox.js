@@ -1,24 +1,28 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import {getBookings} from '../../service'
+import { getBookings } from '../../service'
 
-function Inbox () {
-    const [bookings,setBookings] = useState([])
+function Inbox() {
+    const [bookings, setBookings] = useState([])
 
-	const fetchData = async () => {
-		let darr = []
-		const data = await getBookings(localStorage.getItem('email'))
-		for (let index = 0; index < data.result.length; index++) {
-			darr.push(data.result[index])
-			
-		}
-		setBookings([...darr])
-	}
-    
+    const fetchData = async () => {
+        let darr = []
+
+        const data = await getBookings(localStorage.getItem('email'))
+        if (data.result != "No Data") {
+            for (let index = 0; index < data.result.length; index++) {
+                darr.push(data.result[index])
+
+            }
+            setBookings([...darr])
+        }
+
+    }
+
 
     useEffect(() => {
         fetchData()
-    },[])
+    }, [])
 
     return (
         <>
@@ -48,36 +52,36 @@ function Inbox () {
                                     <div className="mail-side">
                                         <ul className="nav">
                                             <li className="active"><Link to="/app-inbox"><i className="icon-drawer"></i>Inbox<span className="badge badge-primary float-right"></span></Link></li>
-                                            
+
                                         </ul>
                                     </div>
                                 </div>
-                                
-                                    <div className="body mail-right check-all-parent">
+
+                                <div className="body mail-right check-all-parent">
                                     <div className="mail-list">
-                                    {bookings.map((booking) => (
-                                        <ul className="list-unstyled">
-                                            <li className="clearfix">
-                                                <div className="md-left">
-                                                    <label className="fancy-checkbox">
-                                                        <input type="checkbox" name="checkbox" className="checkbox-tick" />
-                                                        <span></span>
-                                                    </label>
-                                                </div>
-                                                
-                                                <div className="md-right">
-                                                <img className="rounded" src="../assets/images/xs/avatar1.jpg" alt="avatar" />
-                                                <p className="sub">{booking.driverName}</p>
-                                                <p style={{fontSize: 18}} className="dep">{booking.message}</p>
-                                                <p style={{fontSize: 14, marginTop: 20}} className="dep">Status : {booking.accepted ? "Accepted" : "Awaiting Acceptance"}</p>
-                                                <span className="time">{booking.date.split("T")[0]}  {booking.time}</span>
-                                                </div>
-                                                
-                                            </li>
-                                        </ul>))}
+                                        {bookings.map((booking) => (
+                                            <ul className="list-unstyled">
+                                                <li className="clearfix">
+                                                    <div className="md-left">
+                                                        <label className="fancy-checkbox">
+                                                            <input type="checkbox" name="checkbox" className="checkbox-tick" />
+                                                            <span></span>
+                                                        </label>
+                                                    </div>
+
+                                                    <div className="md-right">
+                                                        <img className="rounded" src="../assets/images/xs/avatar1.jpg" alt="avatar" />
+                                                        <p className="sub">{booking.driverName}</p>
+                                                        <p style={{ fontSize: 18 }} className="dep">{booking.message}</p>
+                                                        <p style={{ fontSize: 14, marginTop: 20 }} className="dep">Status : {booking.accepted ? "Accepted" : "Awaiting Acceptance"}</p>
+                                                        <span className="time">{booking.date.split("T")[0]}  {booking.time}</span>
+                                                    </div>
+
+                                                </li>
+                                            </ul>))}
                                     </div>
                                 </div>
-                                
+
                             </div>
                         </div>
                     </div>

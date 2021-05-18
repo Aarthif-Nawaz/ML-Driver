@@ -78,8 +78,24 @@ import DriverInbox from './Email/dirver_inbox'
 import Login from './Authentication/login'
 import PlannerCalender from './Calendar/Calendar'
 import DriverCalender from './Calendar/driverCalender'
+import UpdateDriver from './Form/updateDriver'
+import UpdatePlanner from './Form/updatePlanner'
 
 const Routes = [
+    {
+        path: "/update-driver",
+        name: 'UpdateDriver',
+        exact: true,
+        pageTitle: "UpdateDriver",
+        component: UpdateDriver
+    },
+    {
+        path: "/update-planner",
+        name: 'UpdatePlanner',
+        exact: true,
+        pageTitle: "UpdatePlanner",
+        component: UpdatePlanner
+    },
     {
         path: "/plan-calender",
         name: 'PlanCalender',

@@ -1,4 +1,4 @@
-const BASE_URL = process.env.NODE_ENV === 'development' ? "http://localhost:5000" : "http://134.122.44.118"
+const BASE_URL = process.env.NODE_ENV === 'development' ? "http://localhost:5000" : "http://34.121.143.250:5000"
 
 
 export const login = (payload) => {
@@ -24,6 +24,54 @@ export const signup = (payload) => {
         return data
     })
 }
+
+export const driverUpdate = (payload) => {
+    var requestOptions = {
+        method: 'POST',
+        body: JSON.stringify(payload)
+    };
+    return fetch(BASE_URL+"/updateDriver", requestOptions)
+    .then(response => response.json())
+    .then(data => {
+        return data
+    })
+}
+
+export const plannerUpdate = (payload) => {
+    var requestOptions = {
+        method: 'POST',
+        body: JSON.stringify(payload)
+    };
+    return fetch(BASE_URL+"/updatePlanner", requestOptions)
+    .then(response => response.json())
+    .then(data => {
+        return data
+    })
+}
+
+export const userDelete = (payload) => {
+    var requestOptions = {
+        method: 'DELETE',
+        body: JSON.stringify(payload)
+    };
+    return fetch(BASE_URL+"/deleteUser", requestOptions)
+    .then(response => response.json())
+    .then(data => {
+        return data
+    })
+}
+
+export const getUserById = (id) => {
+    var requestOptions = {
+        method: 'GET'
+    };
+    return fetch(BASE_URL+`/fetchUsersByID/${id}`, requestOptions)
+    .then(response => response.json())
+    .then(data => {
+        return data
+    })
+}
+
 
 export const getUsers = () => {
     var requestOptions = {

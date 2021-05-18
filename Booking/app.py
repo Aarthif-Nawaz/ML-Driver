@@ -17,11 +17,14 @@ def signup():
     if request.method == "POST":
         signup = {}
         print(request.get_json())
+        try:
+            signup['vType'] = request.get_json(force=True)['vType']
+            signup['carName'] = request.get_json(force=True)['carName']
+            signup['license'] = request.get_json(force=True)['license']
+            signup['number'] = request.get_json(force=True)['number']
+        except:
+            pass
         signup['FirstName'] = request.get_json(force=True)['fname']
-        signup['vType'] = request.get_json(force=True)['vType']
-        signup['carName'] = request.get_json(force=True)['carName']
-        signup['license'] = request.get_json(force=True)['license']
-        signup['number'] = request.get_json(force=True)['number']
         signup['LastName'] = request.get_json(force=True)['lname']
         signup['Gender'] = request.get_json(force=True)['gender']
         signup['Address'] = request.get_json(force=True)['address']
@@ -102,6 +105,63 @@ def getUsers():
     else:
         return jsonify({'result': 'No Data'})
 
+@app.route('/fetchUsersByID/<id>', methods=['GET'])
+def getUsersByID(id):
+    res = viewUsersByID(id)
+    if res is not None:
+        return jsonify({'result': res})
+    else:
+        return jsonify({'result': 'No Data'})
+
+
+@app.route('/updateDriver', methods=['POST'])
+def updateDriver():
+    signup = {}
+    signup["_id"] = request.get_json(force=True)['_id']
+    signup['FirstName'] = request.get_json(force=True)['fname']
+    signup['LastName'] = request.get_json(force=True)['lname']
+    signup['Gender'] = request.get_json(force=True)['gender']
+    signup['Address'] = request.get_json(force=True)['address']
+    signup['Age'] = request.get_json(force=True)['age']
+    signup['Email'] = request.get_json(force=True)['email']
+    signup['Password'] = request.get_json(force=True)['password']
+    signup['vType'] = request.get_json(force=True)['vType']
+    signup['carName'] = request.get_json(force=True)['carName']
+    signup['license'] = request.get_json(force=True)['license']
+    signup['number'] = request.get_json(force=True)['number']
+    res = updateDriverUser(signup)
+    if res is not None:
+        return jsonify({'result': 'success'})
+    else:
+        return jsonify({'result': 'failure'})
+
+@app.route('/updatePlanner', methods=['POST'])
+def updatePlanner():
+    signup = {}
+    signup["_id"] = request.get_json(force=True)['_id']
+    signup['FirstName'] = request.get_json(force=True)['fname']
+    signup['LastName'] = request.get_json(force=True)['lname']
+    signup['Gender'] = request.get_json(force=True)['gender']
+    signup['Address'] = request.get_json(force=True)['address']
+    signup['Age'] = request.get_json(force=True)['age']
+    signup['Email'] = request.get_json(force=True)['email']
+    signup['Password'] = request.get_json(force=True)['password']
+    res = updatePlanuser(signup)
+    if res is not None:
+        return jsonify({'result': 'success'})
+    else:
+        return jsonify({'result': 'failure'})
+
+@app.route('/deleteUser', methods=['DELETE'])
+def deleteUser():
+    signup = {}
+    signup['_id'] = request.get_json(force=True)['_id']
+    res = deletePlanUser(signup['_id'])
+    if res is not None:
+        return jsonify({'result': 'Success'})
+    else:
+        return jsonify({'result': 'Failure'})
+
 
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", port=5000)
+    app.run()
