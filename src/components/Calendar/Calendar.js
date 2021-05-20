@@ -20,9 +20,6 @@ const Messenger = () => {
                                 </ol>
                             </nav>
                         </div>
-                        <div className="col-md-6 col-sm-12 text-right hidden-xs">
-                            <button onClick={() => history.push('/dashboard')} className="btn btn-sm btn-primary btn-round" title="" data-toggle="modal" data-target="#addevent">Add New Event</button>
-                        </div>
                     </div>
                 </div>
                 <div className="row clearfix">

@@ -87,6 +87,44 @@ function Dashboard2() {
 					</div>
 				</div>
 			</div>
+			<div className="row clearfix">
+				<div className="col-xl-3 col-lg-6 col-md-6 col-sm-12">
+					<div className="card">
+						<div className="body">
+							<div className="row clearfix">
+								<div className="col-7">
+									<h5 className="mb-0">0</h5>
+									<small className="text-muted">Announcements</small>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div className="col-xl-3 col-lg-6 col-md-6 col-sm-12">
+					<div className="card">
+						<div className="body">
+							<div className="row clearfix">
+								<div className="col-7">
+									<h5 className="mb-0">{drivers.length}</h5>
+									<small className="text-muted">Drivers</small>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div className="col-xl-3 col-lg-6 col-md-6 col-sm-12">
+					<div className="card">
+						<div className="body">
+							<div className="row clearfix">
+								<div className="col-7">
+									<h5 className="mb-0">{planners.length}</h5>
+									<small className="text-muted">Planners</small>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
 			{create ?
 				<div>
 					<div className="header">

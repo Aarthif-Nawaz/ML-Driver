@@ -49,6 +49,19 @@ export const plannerUpdate = (payload) => {
     })
 }
 
+export const plannerUpdateDetails = (payload) => {
+    var requestOptions = {
+        method: 'POST',
+        body: JSON.stringify(payload)
+    };
+    return fetch(BASE_URL+"/updatePlannerDetails", requestOptions)
+    .then(response => response.json())
+    .then(data => {
+        return data
+    })
+}
+
+
 export const userDelete = (payload) => {
     var requestOptions = {
         method: 'DELETE',
@@ -66,6 +79,18 @@ export const getUserById = (id) => {
         method: 'GET'
     };
     return fetch(BASE_URL+`/fetchUsersByID/${id}`, requestOptions)
+    .then(response => response.json())
+    .then(data => {
+        return data
+    })
+}
+
+export const getPlansById = (id) => {
+    var requestOptions = {
+        method: 'GET'
+    };
+
+    return fetch(BASE_URL+`/fetchPlansByID/${id}`, requestOptions)
     .then(response => response.json())
     .then(data => {
         return data

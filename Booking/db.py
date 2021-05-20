@@ -109,6 +109,15 @@ def viewUsersByID(id):
     else:
         return None
 
+def viewPlansByID(id):
+    users = dict(db.Planners.find_one({'_id': ObjectId(id)}))
+    stringify_object_id(users)
+    if users:
+        return users
+    else:
+        return None
+
+
 def viewBookings(email):
     plans = list(db.Planners.find({'email': email}))
     stringify_object_id(plans)
@@ -196,6 +205,24 @@ def updatePlan(details):
             "$set": {
                 'accepted': details['accepted'],
                 'clicked': details['clicked']
+            }
+        }
+    )
+
+def updatePlanDetails(details):
+    return db.Planners.update_one(
+        {
+            '_id': ObjectId(details['_id'])
+        },
+        {
+            "$set": {
+                'driverName': details['driver'],
+                'client': details['client'],
+                'fromAddress': details['fromAddress'],
+                'toAddress': details['toAddress'],
+                'date': details['date'],
+                'time': details['time'],
+                'message': details['message']
             }
         }
     )

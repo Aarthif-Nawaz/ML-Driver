@@ -36,14 +36,6 @@ const Dashboard5 = () => {
                                         <h5 className="mb-0">3,210</h5>
                                         <small className="text-muted">Interested</small>
                                     </div>
-                                    <div className="col-5 text-right">
-                                        <h2 className="m-b-0">47%</h2>
-                                    </div>
-                                    <div className="col-12">
-                                        <div className="progress progress-xxs progress-transparent custom-color-blue mb-0 mt-3">
-                                            <div className="progress-bar" data-transitiongoal="47" aria-valuenow="47" style={{ width: "47%" }}></div>
-                                        </div>
-                                    </div>
                                 </div>
                             </div>
                         </div>

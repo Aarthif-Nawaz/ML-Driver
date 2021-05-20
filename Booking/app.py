@@ -113,6 +113,14 @@ def getUsersByID(id):
     else:
         return jsonify({'result': 'No Data'})
 
+@app.route('/fetchPlansByID/<id>', methods=['GET'])
+def getPlansById(id):
+    res = viewPlansByID(id)
+    if res is not None:
+        return jsonify({'result': res})
+    else:
+        return jsonify({'result': 'No Data'})
+
 
 @app.route('/updateDriver', methods=['POST'])
 def updateDriver():
@@ -157,6 +165,23 @@ def deleteUser():
     signup = {}
     signup['_id'] = request.get_json(force=True)['_id']
     res = deletePlanUser(signup['_id'])
+    if res is not None:
+        return jsonify({'result': 'Success'})
+    else:
+        return jsonify({'result': 'Failure'})
+
+@app.route('/updatePlannerDetails', methods=['POST'])
+def updatePlanDetailsData():
+    plan = {}
+    plan['_id'] = request.get_json(force=True)['_id']
+    plan['driver'] = request.get_json(force=True)['driver']
+    plan['client'] = request.get_json(force=True)['client']
+    plan['fromAddress'] = request.get_json(force=True)['fromAddress']
+    plan['toAddress'] = request.get_json(force=True)['toAddress']
+    plan['date'] = request.get_json(force=True)['date']
+    plan['time'] = request.get_json(force=True)['time']
+    plan['message'] = request.get_json(force=True)['message']
+    res = updatePlanDetails(plan)
     if res is not None:
         return jsonify({'result': 'Success'})
     else:

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import DropdownMenu from '../common/dropdown';
 import Datepicker from '../common/datepicker';
-import { saveBooking, getUsers } from '../../service'
+import { saveBooking, getUsers, getPlansById, plannerUpdateDetails } from '../../service'
 import TimePicker from 'react-time-picker';
 import { useHistory } from 'react-router-dom'
 import { ToastContainer, toast } from "react-toastify";
@@ -10,7 +10,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 toast.configure();
 
-function FormsBasic() {
+function FormsBasic(props) {
     const [time, onTimeChange] = useState('10:00');
     const [drivers, setDrivers] = useState([])
     const [driver, setDriver] = useState('')
@@ -19,19 +19,30 @@ function FormsBasic() {
     const [toAddress, settoAddress] = useState('')
     const [date, setDate] = useState(new Date())
     const [message, setMessage] = useState('')
-
+    const [update,setUpdate] = useState(false)
     const history = useHistory()
 
-    const fetchData = async () => {
 
+    const fetchData = async () => {
+        var action = props.location.state.action
         let darr = []
+        if (action == "Update") {
+            const id = props.location.state.id
+            const data = await getPlansById(id)
+            setUpdate(true)
+            setDriver(data.result.driverName)
+            setClient(data.result.client)
+            setFromAddress(data.result.fromAddress)
+            settoAddress(data.result.toAddress)
+            setDate(new Date(data.result.date))
+            setMessage(data.result.message)
+
+        }
         const data = await getUsers()
         for (let index = 0; index < data.result.length; index++) {
             if (data.result[index].type == "driver") {
                 darr.push(data.result[index])
             }
-
-
         }
         setDrivers([...darr])
 
@@ -39,16 +50,24 @@ function FormsBasic() {
 
 
     useEffect(() => {
+        setDate(props.location.state.date)
         fetchData()
     }, [])
 
     const save = async () => {
-        const response = await saveBooking({ email: localStorage.getItem('email'), driver, time, client, fromAddress, toAddress, date, message })
-        if (response['result'] == "success") {
-            toast.success("Saved Bookings Successfully", {
-                position: toast.POSITION_TOP_RIGHT,
-            });
+        if(update){
+            const id = props.location.state.id
+            const response = await plannerUpdateDetails({_id:id, driver, time, client, fromAddress, toAddress, date, message})
+            if (response['result'] == "Success") {
+                history.push('/plan-calender')
+            }
+        }else{
+            const response = await saveBooking({ email: localStorage.getItem('email'), driver, time, client, fromAddress, toAddress, date, message })
+            if (response['result'] == "success") {
+                history.push('/plan-calender')
+            }
         }
+        
     }
 
 
@@ -100,7 +119,7 @@ function FormsBasic() {
                                     <div className="input-group-prepend">
                                         <label className="input-group-text" htmlFor="inputGroupSelect01">Driver</label>
                                     </div>
-                                    <select onChange={(e) => setDriver(e.target.value)} className="custom-select" id="inputGroupSelect01">
+                                    <select value={driver} onChange={(e) => setDriver(e.target.value)} className="custom-select" id="inputGroupSelect01">
                                         <option value>Choose...</option>
                                         {drivers.map((driver) => (
                                             <option value={driver.email}>{driver.email}</option>
@@ -109,7 +128,7 @@ function FormsBasic() {
                                 </div>
 
                                 <div className="input-group mb-3">
-                                    <input onChange={(e) => setClient(e.target.value)} type="text" className="form-control" placeholder="Full Name" aria-label="Recipient's username" aria-describedby="basic-addon2" />
+                                    <input value={client} onChange={(e) => setClient(e.target.value)} type="text" className="form-control" placeholder="Full Name" aria-label="Recipient's username" aria-describedby="basic-addon2" />
                                     <div className="input-group-append">
                                         <span className="input-group-text" id="basic-addon2">Aarthif Nawaz</span>
                                     </div>
@@ -117,14 +136,14 @@ function FormsBasic() {
 
 
                                 <div className="input-group mb-3">
-                                    <input onChange={(e) => setFromAddress(e.target.value)} type="text" className="form-control" placeholder="From Address" aria-label="Recipient's username" aria-describedby="basic-addon2" />
+                                    <input value={fromAddress} onChange={(e) => setFromAddress(e.target.value)} type="text" className="form-control" placeholder="From Address" aria-label="Recipient's username" aria-describedby="basic-addon2" />
                                     <div className="input-group-append">
                                         <span className="input-group-text" id="basic-addon2">123/3, Anderson Road, Dehiwela</span>
                                     </div>
                                 </div>
 
                                 <div className="input-group mb-3">
-                                    <input onChange={(e) => settoAddress(e.target.value)} type="text" className="form-control" placeholder="To Address" aria-label="Recipient's username" aria-describedby="basic-addon2" />
+                                    <input value={toAddress} onChange={(e) => settoAddress(e.target.value)} type="text" className="form-control" placeholder="To Address" aria-label="Recipient's username" aria-describedby="basic-addon2" />
                                     <div className="input-group-append">
                                         <span className="input-group-text" id="basic-addon2">123/3, Pokuna Road, Dehiwela</span>
                                     </div>
@@ -145,10 +164,10 @@ function FormsBasic() {
                                     <div className="input-group-prepend">
                                         <span className="input-group-text">Message</span>
                                     </div>
-                                    <textarea onChange={(e) => setMessage(e.target.value)} className="form-control" aria-label="With textarea"></textarea>
+                                    <textarea value={message} onChange={(e) => setMessage(e.target.value)} className="form-control" aria-label="With textarea"></textarea>
                                 </div>
 
-                                <span style={{ marginTop: 20 }} onClick={save} className="btn btn-sm btn-primary mr-1" title="">Save Booking</span>
+                                <span style={{ marginTop: 20 }} onClick={save} className="btn btn-sm btn-primary mr-1" title="">{update ? "Update Booking" : "Save Booking"}</span>
                             </div>
                         </div>
                     </div>

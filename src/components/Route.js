@@ -1,7 +1,6 @@
 import Dashboard from './Dashboard/dashboard';
 import Dashboard2 from './Dashboard/dashboard2';
 import Dashboard3 from './Dashboard/dashboard3';
-import Dashboard4 from './Dashboard/dashboard4';
 import Dashboard5 from './Dashboard/dashboard5';
 import Dashboard6 from './Dashboard/dashboard6';
 import Dashboard7 from './Dashboard/dashboard7';
@@ -80,8 +79,23 @@ import PlannerCalender from './Calendar/Calendar'
 import DriverCalender from './Calendar/driverCalender'
 import UpdateDriver from './Form/updateDriver'
 import UpdatePlanner from './Form/updatePlanner'
-
+import CreatePlan from './Form/formsBasic'
+import Dashboard4 from './Dashboard/dashboard4'
 const Routes = [
+    {
+        path: "/driver-view",
+        name: 'DriverView',
+        exact: true,
+        pageTitle: "DriverView",
+        component: Dashboard4
+    },
+    {
+        path: "/create-paln",
+        name: 'CreatePlan',
+        exact: true,
+        pageTitle: "CreatePlan",
+        component: CreatePlan
+    },
     {
         path: "/update-driver",
         name: 'UpdateDriver',
@@ -627,13 +641,6 @@ const Routes = [
         exact: true,
         pageTitle: "Dashboard5",
         component: Dashboard5
-    },
-    {
-        path: "/dashboard4",
-        name: 'dashboard4',
-        exact: true,
-        pageTitle: "Dashboard4",
-        component: Dashboard4
     },
     {
         path: "/dashboard3",

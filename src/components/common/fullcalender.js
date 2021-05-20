@@ -1,81 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import FullCalendar from 'fullcalendar-reactwrapper';
 import "fullcalendar-reactwrapper/dist/css/fullcalendar.min.css"
 // import '../../assets/plugins/fullcalendar/fullcalendar.min.css';
 import {getBookings} from '../../service'
-
-const eventsd = [
-    {
-        title: 'All Day Event',
-        start: '2018-07-01',
-        className: 'bg-info',
-    },
-    {
-        title: 'Long Event',
-        start: '2018-07-07',
-        end: '2018-07-10',
-        className: 'bg-danger'
-    },
-    {
-        id: 999,
-        title: 'Product Event',
-        start: '2018-09-09T03:00:00',
-        end: '2018-09-09T10:00:00',
-        className: 'bg-cyan'
-    },
-    {
-        id: 999,
-        title: 'Repeating Event',
-        start: '2018-10-23T16:00:00',
-        className: 'bg-azura'
-    },
-    {
-        title: 'Conference',
-        start: '2018-09-19',
-        end: '2018-08-20',
-        className: 'bg-green'
-    },
-    {
-        title: 'Meeting',
-        start: '2018-09-13T08:30:00',
-        end: '2018-09-13T17:30:00',
-        className: 'bg-red'
-    },
-    {
-        title: 'Lunch',
-        start: '2018-08-12T12:00:00',
-        className: 'bg-blush'
-    },
-    {
-        title: 'Meeting with Clients',
-        start: '2018-09-18T14:30:00',
-        className: 'bg-red'
-    },
-    {
-        title: 'Happy Hour',
-        start: '2018-09-013T17:30:00',
-        className: 'bg-pink'
-    },
-    {
-        title: 'Dinner with Boss',
-        start: '2018-09-11T20:00:00',
-        className: 'bg-orange'
-    },
-    {
-        title: 'Outing with Friends',
-        start: new Date(2021, 4, 24, 14, 30, 0),
-        end: new Date(2021, 4, 24, 15, 45, 0),
-        className: 'bg-indigo'
-    },
-    {
-        title: 'Click for Google',
-        url: 'http://google.com/',
-        start: new Date(2021, 4, 24, 10, 20, 0),
-        className: 'bg-blue'
-    }
-]
+import FullCalendar from '@fullcalendar/react'
+import dayGridPlugin from '@fullcalendar/daygrid'
+import interactionPlugin from '@fullcalendar/interaction'
+import {useHistory} from 'react-router-dom'
+import tippy from 'tippy.js';
+import 'tippy.js/dist/tippy.css';
 
 function Fullcalender() {
+    const history = useHistory();
 
     const headerdata = {
         left: 'title', // you can add today btn
@@ -102,6 +37,7 @@ function Fullcalender() {
                 const currentDate = new Date(year,month,day,hour,sec,0)
                 
                 const events = {
+                    id : data['result'][index]._id,
                     title: data.result[index].message,
                     start: currentDate,
                     className: 'bg-blue'
@@ -121,13 +57,72 @@ function Fullcalender() {
         fetchData()
     },[])
 
+    const showData = (arg) => {
+        
+        history.push({
+            pathname: '/create-paln',
+            state : {id : arg.event.id, action : "Update"}
+        })
+    }
+
+    const handleDateClick = (arg) => {
+        history.push({
+            pathname: '/create-paln',
+            state: {date: arg.date, action : "Create"}
+        })
+        console.log(arg.dateStr)
+        
+    }
+
+    const handleMouseEnter = async(arg) => {
+        console.log(arg.event.id)
+        var messageContent = {
+            accepted : "",
+            client: "",
+            date: "",
+            driverName: "",
+            email: "",
+            from: "",
+            to: "",
+            time:""
+        }
+        const data = await getBookings(localStorage.getItem('email'))
+        for (let index = 0; index < data.result.length; index++) {
+            if (data['result'][index].message == arg.event.title && data['result'][index]._id == arg.event.id){
+                console.log(data['result'][index])
+                messageContent = {
+                    accepted : data['result'][index].accepted,
+                    client: data['result'][index].client,
+                    date: data['result'][index].date,
+                    driverName: data['result'][index].driverName,
+                    email: data['result'][index].email,
+                    from: data['result'][index].fromAddress,
+                    to: data['result'][index].toAddress,
+                    time: data['result'][index].time
+                }
+            }
+            
+        }
+        console.log(arg.event.title)
+        tippy(arg.el, {
+            content: "Message : "+ "  "+arg.event.title + " " + "Accepted : "+ "  "+messageContent.accepted + " " + "Client Name : "+ "  "+messageContent.client+ " " + "Date : "+ "  "+messageContent.date+ " " + "Driver Name : "+ "  "+messageContent.driverName+ " " + "Email : "+ "  "+messageContent.email+ " " + "From Address : "+ "  "+messageContent.from + " " + "To Address : "+ "  "+messageContent.to+ " " + "Pick Up Time : "+ "  "+messageContent.time
+        });
+    }
+
+    
+
 
     return (
         <div id="calender">
             <FullCalendar
                 id="calendar"
+                plugins={[ interactionPlugin, dayGridPlugin ]}
                 header={headerdata}
+                initialView="dayGridMonth"
+                dateClick={(arg) => handleDateClick(arg)}
                 defaultDate={date}
+                eventClick={showData}
+                eventMouseEnter={(arg) => handleMouseEnter(arg)}
                 droppable={true}
                 contentHeight='auto'
                 editable={true}
@@ -137,6 +132,7 @@ function Fullcalender() {
                 events={bookings}
 
             />
+              
         </div>
     );
 }

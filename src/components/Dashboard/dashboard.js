@@ -8,13 +8,22 @@ import { getBookings } from '../../service'
 function Dashboard() {
 	const [view, setView] = useState(true)
 	const [bookings, setBookings] = useState([])
-
+	const [acount,setDacount] = useState(0);
+	const [dcount,setDdcount] = useState(0);
+	const [res,setRes] = useState(0)
 	const fetchData = async () => {
 		let darr = []
 		try {
 			const data = await getBookings(localStorage.getItem('email'))
+			setRes(data.result.length)
 			if (data.result != "No Data"){
 				for (let index = 0; index < data.result.length; index++) {
+					if(data.result[index].accepted){
+						setDacount(prevCount => prevCount +1)
+					}
+					if(!data.result[index].accepted){
+						setDdcount(prevCount => prevCount +1)
+					}
 					darr.push(data.result[index])
 	
 				}
@@ -54,8 +63,57 @@ function Dashboard() {
 						</nav>
 					</div>
 					<div className="col-md-6 col-sm-12 text-right hidden-xs">
-						<span onClick={createBooking} className="btn btn-sm btn-primary mr-1" title="">Create Booking</span>
 						<span onClick={viewBooking} className="btn btn-sm btn-primary mr-1" title="">View Bookings</span>
+					</div>
+				</div>
+			</div>
+			<div className="row clearfix">
+				<div className="col-xl-3 col-lg-6 col-md-6 col-sm-12">
+					<div className="card">
+						<div className="body">
+							<div className="row clearfix">
+								<div className="col-7">
+									<h5 className="mb-0">0</h5>
+									<small className="text-muted">Announcements</small>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div className="col-xl-3 col-lg-6 col-md-6 col-sm-12">
+					<div className="card">
+						<div className="body">
+							<div className="row clearfix">
+								<div className="col-7">
+									<h5 className="mb-0">{res}</h5>
+									<small className="text-muted">Reservations</small>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div className="col-xl-3 col-lg-6 col-md-6 col-sm-12">
+					<div className="card">
+						<div className="body">
+							<div className="row clearfix">
+								<div className="col-7">
+									<h5 className="mb-0">{acount}</h5>
+									<small className="text-muted">Acceptance</small>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div className="col-xl-3 col-lg-6 col-md-6 col-sm-12">
+					<div className="card">
+						<div className="body">
+							<div className="row clearfix">
+								<div className="col-7">
+									<h5 className="mb-0">{dcount}</h5>
+									<small className="text-muted">Declines</small>
+								</div>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>

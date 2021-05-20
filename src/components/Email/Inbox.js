@@ -7,7 +7,6 @@ function Inbox() {
 
     const fetchData = async () => {
         let darr = []
-
         const data = await getBookings(localStorage.getItem('email'))
         if (data.result != "No Data") {
             for (let index = 0; index < data.result.length; index++) {
