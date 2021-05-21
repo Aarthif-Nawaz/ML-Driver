@@ -60,14 +60,14 @@ function UpdateDriver (props) {
                                 <div className="input-group mb-3">
                                     <input value={fname} type="text" onChange={(e) => setFname(e.target.value)} className="form-control" placeholder="First Name" aria-label="Recipient's username" aria-describedby="basic-addon2" />
                                     <div className="input-group-append">
-                                        <span className="input-group-text" id="basic-addon2">Aarthif</span>
+                                        <span className="input-group-text" id="basic-addon2">John</span>
                                     </div>
                                 </div>
 
                                 <div className="input-group mb-3">
                                     <input value={lname} type="text" onChange={(e) => setLname(e.target.value)} className="form-control" placeholder="Last Name" aria-label="Recipient's username" aria-describedby="basic-addon2" />
                                     <div className="input-group-append">
-                                        <span className="input-group-text" id="basic-addon2">Nawaz</span>
+                                        <span className="input-group-text" id="basic-addon2">Doe</span>
                                     </div>
                                 </div>
 
@@ -126,14 +126,14 @@ function UpdateDriver (props) {
                                 <div className="input-group mb-3">
                                     <input value={address} onChange={(e) => setAddress(e.target.value)} type="text" className="form-control" placeholder="Address" aria-label="Address" aria-describedby="basic-addon2" />
                                     <div className="input-group-append">
-                                        <span className="input-group-text" id="basic-addon2">123/3, Anderson Road , Dehiwela</span>
+                                        <span className="input-group-text" id="basic-addon2">123/3, Anderson Road , Cambridge</span>
                                     </div>
                                 </div>
 
                                 <div className="input-group mb-3">
                                     <input value={email} onChange={(e) => setEmail(e.target.value)} type="email" className="form-control" placeholder="email" aria-label="email" aria-describedby="basic-addon2" />
                                     <div className="input-group-append">
-                                        <span className="input-group-text" id="basic-addon2">aarthifnawaz@gmail.com</span>
+                                        <span className="input-group-text" id="basic-addon2">johndoe@gmail.com</span>
                                     </div>
                                 </div>
 

@@ -105,7 +105,7 @@ function Fullcalender() {
         }
         console.log(arg.event.title)
         tippy(arg.el, {
-            content: "Message : "+ "  "+arg.event.title + " " + "Accepted : "+ "  "+messageContent.accepted + " " + "Client Name : "+ "  "+messageContent.client+ " " + "Date : "+ "  "+messageContent.date+ " " + "Driver Name : "+ "  "+messageContent.driverName+ " " + "Email : "+ "  "+messageContent.email+ " " + "From Address : "+ "  "+messageContent.from + " " + "To Address : "+ "  "+messageContent.to+ " " + "Pick Up Time : "+ "  "+messageContent.time
+            content: "Message : "+ "  "+arg.event.title + " , " + "Accepted : "+ "  "+messageContent.accepted + ", " + "Client Name : "+ "  "+messageContent.client+ "," + "Date : "+ "  "+messageContent.date+ " ," + "Driver Name : "+ "  "+messageContent.driverName+ " ," + "Email : "+ "  "+messageContent.email+ " ," + "From Address : "+ "  "+messageContent.from + ", " + "To Address : "+ "  "+messageContent.to+ " , " + "Pick Up Time : "+ "  "+messageContent.time
         });
     }
 

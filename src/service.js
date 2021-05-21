@@ -61,6 +61,16 @@ export const plannerUpdateDetails = (payload) => {
     })
 }
 
+export const getAllBookings = () => {
+    var requestOptions = {
+        method: 'GET',
+    };
+    return fetch(BASE_URL+"/getAllBookings", requestOptions)
+    .then(response => response.json())
+    .then(data => {
+        return data
+    })
+}
 
 export const userDelete = (payload) => {
     var requestOptions = {

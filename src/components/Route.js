@@ -81,7 +81,24 @@ import UpdateDriver from './Form/updateDriver'
 import UpdatePlanner from './Form/updatePlanner'
 import CreatePlan from './Form/formsBasic'
 import Dashboard4 from './Dashboard/dashboard4'
+import AllPlans from './Dashboard/allPlans'
+import AllDriver from './Dashboard/allDriver'
+
 const Routes = [
+    {
+        path: "/driver-dashboard",
+        name: 'DriverDashboard',
+        exact: true,
+        pageTitle: "DriverDashboard",
+        component: AllDriver
+    },
+    {
+        path: "/planners-dashboard",
+        name: 'PlansDashBoard',
+        exact: true,
+        pageTitle: "PlansDashBoard",
+        component: AllPlans
+    },
     {
         path: "/driver-view",
         name: 'DriverView',
