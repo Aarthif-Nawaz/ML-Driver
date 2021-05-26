@@ -83,8 +83,15 @@ import CreatePlan from './Form/formsBasic'
 import Dashboard4 from './Dashboard/dashboard4'
 import AllPlans from './Dashboard/allPlans'
 import AllDriver from './Dashboard/allDriver'
-
+import SelectItems from './Form/selectItems'
 const Routes = [
+    {
+        path: "/select-removals",
+        name: 'SelectRemovals',
+        exact: true,
+        pageTitle: "SelectRemovals",
+        component: SelectItems
+    },
     {
         path: "/driver-dashboard",
         name: 'DriverDashboard',

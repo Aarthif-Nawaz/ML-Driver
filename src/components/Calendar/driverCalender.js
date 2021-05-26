@@ -1,10 +1,28 @@
-import React from 'react';
+import React , {useState, useEffect} from 'react';
 import { Link } from 'react-router-dom';
 import Fullcalender from '../common/driverCalender';
-import {useHistory} from 'react-router-dom'
+import {useHistory, useLocation} from 'react-router-dom'
+import { computeSegDraggable } from '@fullcalendar/common';
 
-const DriverCalender = () => {
+const DriverCalender = (props) => {
     const history = useHistory()
+    const location = useLocation()
+
+    const [email,setEmail] = useState(location.state ? props.location.state.email : localStorage.getItem('email'))
+
+    useEffect(() => {
+        try{
+            if(props.location.state.email){
+                setEmail(props.location.state.email)
+            }
+        }catch(e){
+            console.log(e)
+        }
+        
+        
+    },[])
+
+    console.log(email)
     return (
         <>
         {/*  */}
@@ -26,7 +44,7 @@ const DriverCalender = () => {
                     </div>
                 </div>
                 <div className="row clearfix">
-                    <Fullcalender></Fullcalender>
+                    <Fullcalender email={email}></Fullcalender>
                 </div>
             </div>
         </>

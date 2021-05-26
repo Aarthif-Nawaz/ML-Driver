@@ -139,11 +139,16 @@ function Dashboard2() {
 							<table className="table table-hover table-custom spacing8">
 								<thead>
 									<tr>
-										<th>Name</th>
+										<th>Firt Name</th>
+										<th>Last Name</th>
 										<th>Address</th>
 										<th>Email</th>
 										<th>Age</th>
 										<th>Gender</th>
+										<th>Vehicle Type</th>
+										<th>Vehicle Name</th>
+										<th>Vehicle Licesne Plate</th>
+										<th>Vehicle Number</th>
 										<th>Update</th>
 										<th>Delete</th>
 									</tr>
@@ -154,6 +159,9 @@ function Dashboard2() {
 											<td className="w60">
 												{driver.firstName}
 											</td>
+											<td className="w60">
+												{driver.lastName}
+											</td>
 											<td>
 												{driver.address}
 											</td>
@@ -162,6 +170,11 @@ function Dashboard2() {
 											</td>
 											<td>{driver.age}</td>
 											<td>{driver.gender}</td>
+											<td>{driver.vType}</td>
+											<td>{driver.carname}</td>
+											<td>{driver.license}</td>
+											<td>{driver.number}</td>
+											
 											<td><button onClick={() => updateDriver(driver._id)} style={{ width: 70, backgroundColor: 'green', color: 'white' }}>Update</button></td>
 											<td><button onClick={() => deleteUser(driver._id)} style={{ width: 70, backgroundColor: 'green', color: 'white' }}>Delete</button></td>
 										</tr>
@@ -186,7 +199,8 @@ function Dashboard2() {
 							<table className="table table-hover table-custom spacing8">
 								<thead>
 									<tr>
-										<th>Name</th>
+										<th>First Name</th>
+										<th>Last Name</th>
 										<th>Address</th>
 										<th>Email</th>
 										<th>Age</th>
@@ -200,6 +214,9 @@ function Dashboard2() {
 										<tr>
 											<td className="w60">
 												{planner.firstName}
+											</td>
+											<td className="w60">
+												{planner.lastName}
 											</td>
 											<td>
 												{planner.address}

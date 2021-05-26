@@ -61,7 +61,13 @@ def createPlans():
     plan['fromAddress'] = request.get_json(force=True)['fromAddress']
     plan['toAddress'] = request.get_json(force=True)['toAddress']
     plan['date'] = request.get_json(force=True)['date']
+    plan['data'] = request.get_json(force=True)['data']
     plan['time'] = request.get_json(force=True)['time']
+    plan['items'] = request.get_json(force=True)['items']
+    plan['DelDate'] = request.get_json(force=True)['DelDate']
+    plan['endTime'] = request.get_json(force=True)['endTime']
+    plan['peopleReq'] = request.get_json(force=True)['peopleReq']
+    plan['specialReq'] = request.get_json(force=True)['specialReq']
     plan['message'] = request.get_json(force=True)['message']
     res = createPlan(plan)
     if res is not None:
@@ -84,6 +90,15 @@ def getDriverBookings(email):
         return jsonify({'result': res})
     else:
         return jsonify({'result': 'No Data'})
+
+@app.route('/fetchPlannerBookings/<type>/<value>', methods=['GET'])
+def searchPlannerBookings(type,value):
+    res = searchData(type,value)
+    if res is not None:
+        return jsonify({'result': res})
+    else:
+        return jsonify({'result': 'No Data'})
+
 
 @app.route('/updatePlan', methods=['POST'])
 def updatePlans():
@@ -180,6 +195,12 @@ def updatePlanDetailsData():
     plan['toAddress'] = request.get_json(force=True)['toAddress']
     plan['date'] = request.get_json(force=True)['date']
     plan['time'] = request.get_json(force=True)['time']
+    plan['items'] = request.get_json(force=True)['items']
+    plan['data'] = request.get_json(force=True)['data']
+    plan['DelDate'] = request.get_json(force=True)['DelDate']
+    plan['endTime'] = request.get_json(force=True)['endTime']
+    plan['peopleReq'] = request.get_json(force=True)['peopleReq']
+    plan['specialReq'] = request.get_json(force=True)['specialReq']
     plan['message'] = request.get_json(force=True)['message']
     res = updatePlanDetails(plan)
     if res is not None:

@@ -1,44 +1,99 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import Columnchart from '../common/columnchart';
-import Tooltip from '../common/toolTip';
 import FormsBasic from '../Form/formsBasic'
-import { getDriverBookings, updateBooking, getAllBookings } from '../../service'
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { getAllBookings, searchPlannerBookings } from '../../service'
+import { Card, Button } from 'react-bootstrap'
+import {useHistory} from 'react-router-dom'
 
-toast.configure();
 function AllDriver() {
-	const [view, setView] = useState(true)
-	const [bookings, setBookings] = useState([])
-	const [clicked, setClicked] = useState(false)
-	const [acount,setDacount] = useState(0);
-	const [dcount,setDdcount] = useState(0);
-	const  [res,setRes] = useState(0)
-    const [plans,setPlans] = useState([])
+    const [view, setView] = useState(true)
+    const [bookings, setBookings] = useState([])
+    const [acount, setDacount] = useState(0);
+    const [dcount, setDdcount] = useState(0);
+    const [res, setRes] = useState(0)
+    const [plans, setPlans] = useState([])
+    const [search, setSearch] = useState('')
+    const [type, setType] = useState('_id')
 
-    const searchData = async(value) => {
+    const history = useHistory()
+
+    const viewData = (type,email) => {
+        if (type == "Calender"){
+            history.push({
+                pathname: '/driver-calender',
+                state: {email: email}
+            })
+        }
+        else{
+            history.push({
+                pathname: '/driver-inbox',
+                state: {email: email}
+            })
+        }
+    }
+
+    const searchData = async (type, value) => {
         console.log(value)
         let darr = []
         let a = 0
         let c = 0
+		if(type == "all"){
+			fetchData()
+		}
+		else{
+			try {
+				const data = await searchPlannerBookings(type,value)
+				if (data.result != "No Data") {
+					console.log(data.result)
+					setRes(data.result.length)
+					for (let index = 0; index < data.result.length; index++) {
+						if (data.result[index].accepted) {
+							a += 1
+						}
+						if (!data.result[index].accepted) {
+							c += 1
+						}
+						darr.push(data.result[index])
+	
+					}
+					setBookings([...darr])
+					setDacount(a)
+					setDdcount(c)
+				}
+				else {
+					setRes(0)
+					setBookings([])
+					setDacount(0)
+					setDdcount(0)
+				}
+	
+			} catch (e) {
+				console.log(e)
+			}
+	
+		}
+        
+    }
+
+    const fetchData = async () => {
+        let darr = []
         try {
-            const data = await getDriverBookings(value)
+            const data = await getAllBookings()
             if (data.result != "No Data") {
+                const unique = [...new Set(data.result.map(item => item.email))];
                 setRes(data.result.length)
                 for (let index = 0; index < data.result.length; index++) {
                     if (data.result[index].accepted) {
-                        a +=1
+                        setDacount(prevCount => prevCount + 1)
                     }
                     if (!data.result[index].accepted) {
-                        c +=1
+                        setDdcount(prevCount => prevCount + 1)
                     }
                     darr.push(data.result[index])
 
                 }
                 setBookings([...darr])
-                setDacount(a)
-                setDdcount(c)
+                setPlans([...unique])
             }
             else {
                 setRes(0)
@@ -47,164 +102,160 @@ function AllDriver() {
         } catch (e) {
             console.log(e)
         }
+
+
     }
 
-	const fetchData = async () => {
-		let darr = []
-		
-		try {
-			const data = await getAllBookings()
-			if (data.result != "No Data") {
-                const unique = [...new Set(data.result.map(item => item.driverName))];
-				setRes(data.result.length)
-				for (let index = 0; index < data.result.length; index++) {
-					if(data.result[index].accepted){
-						console.log("hello")
-						setDacount(prevCount => prevCount +1)
-					}
-					if(!data.result[index].accepted){
-						setDdcount(prevCount => prevCount +1)
-					}
-					//console.log(data.result[index])
-					darr.push(data.result[index])
-
-				}
-				setBookings([...darr])
-                setPlans([...unique])
-			}
-		} catch (e) {
-			console.log(e)
-		}
 
 
-	}
 
-	useEffect(() => {
-		fetchData()
-	}, [])
+    useEffect(() => {
+        fetchData()
+    }, [])
 
-	const createBooking = () => {
-		setView(false)
-	}
+    const createBooking = () => {
+        setView(false)
+    }
 
-	const viewBooking = () => {
-		setView(true)
-	}
-	return (
-		<div className="container-fluid">
-			<div className="block-header">
-				<div className="row clearfix">
-					<div className="col-md-6 col-sm-12">
-						<h1>Driver</h1>
-						<nav aria-label="breadcrumb">
-							<ol className="breadcrumb">
-								<li className="breadcrumb-item"><Link to="/">Booking System</Link></li>
-								<li className="breadcrumb-item active" aria-current="page">Driver</li>
-							</ol>
-						</nav>
-					</div>
-					<div className="col-md-6 col-sm-12 text-right hidden-xs">
-						<span onClick={viewBooking} className="btn btn-sm btn-primary mr-1" title="">View Bookings</span>
-					</div>
-				</div>
-
-			</div>
-			<div className="row clearfix">
-				<div className="col-xl-3 col-lg-6 col-md-6 col-sm-12">
-					<div className="card">
-						<div className="body">
-							<div className="row clearfix">
-								<div className="col-7">
-									<h5 className="mb-0">0</h5>
-									<small className="text-muted">Announcements</small>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div className="col-xl-3 col-lg-6 col-md-6 col-sm-12">
-					<div className="card">
-						<div className="body">
-							<div className="row clearfix">
-								<div className="col-7">
-									<h5 className="mb-0">{res}</h5>
-									<small className="text-muted">Reservations</small>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div className="col-xl-3 col-lg-6 col-md-6 col-sm-12">
-					<div className="card">
-						<div className="body">
-							<div className="row clearfix">
-								<div className="col-7">
-									<h5 className="mb-0">{acount}</h5>
-									<small className="text-muted">Acceptance</small>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div className="col-xl-3 col-lg-6 col-md-6 col-sm-12">
-					<div className="card">
-						<div className="body">
-							<div className="row clearfix">
-								<div className="col-7">
-									<h5 className="mb-0">{dcount}</h5>
-									<small className="text-muted">Declines</small>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-            <div className="input-group mb-3">
-                <div className="input-group-prepend">
-                    <label className="input-group-text" htmlFor="inputGroupSelect01">Driver</label>
+    const viewBooking = () => {
+        setView(true)
+    }
+    return (
+        <div className="container-fluid">
+            <div className="block-header">
+                <div className="row clearfix">
+                    <div className="col-md-6 col-sm-12">
+                        <h1>Driver</h1>
+                        <nav aria-label="breadcrumb">
+                            <ol className="breadcrumb">
+                                <li className="breadcrumb-item"><Link to="/">Booking System</Link></li>
+                                <li className="breadcrumb-item active" aria-current="page">Driver</li>
+                            </ol>
+                        </nav>
+                    </div>
+                    <div className="col-md-6 col-sm-12 text-right hidden-xs">
+                        <span onClick={viewBooking} className="btn btn-sm btn-primary mr-1" title="">View Bookings</span>
+                    </div>
                 </div>
-                <select onChange={(e) => searchData(e.target.value)} className="custom-select" id="inputGroupSelect01">
-                    {plans.map((plan) => (
-                        <option value={plan}>{plan}</option>
-                    ))}
-
-                </select>
             </div>
-			{view ?
-				<div className="row clearfix">
-					<div className="col-lg-12 col-md-12">
-						<div className="table-responsive">
-							<table className="table table-hover table-custom spacing5">
-								<thead>
-									<tr>
-										<th>Client Name</th>
-										<th>Client Email</th>
-										<th>From Address</th>
-										<th>To Address</th>
-										<th>Date</th>
-										<th>Time</th>
-									</tr>
-								</thead>
-								<tbody>
-									{bookings.length > 0 ? bookings.map((booking) => (
-										<tr>
-											<td>{booking.client}</td>
-											<td>{booking.email}</td>
-											<td>{booking.fromAddress}</td>
-											<td>{booking.toAddress}</td>
-											<td>{booking.date.split("T")[0]}</td>
-											<td>{booking.time}</td>
-										</tr>
-									)) : <></>}
-								</tbody>
-							</table>
-						</div>
-					</div>
-				</div> :
-				<FormsBasic />
-			}
-		</div>
-	);
+            <div className="row clearfix">
+                <div className="col-xl-3 col-lg-6 col-md-6 col-sm-12">
+                    <div className="card">
+                        <div className="body">
+                            <div className="row clearfix">
+                                <div className="col-7">
+                                    <h5 className="mb-0">0</h5>
+                                    <small className="text-muted">Announcements</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div className="col-xl-3 col-lg-6 col-md-6 col-sm-12">
+                    <div className="card">
+                        <div className="body">
+                            <div className="row clearfix">
+                                <div className="col-7">
+                                    <h5 className="mb-0">{res}</h5>
+                                    <small className="text-muted">Reservations</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div className="col-xl-3 col-lg-6 col-md-6 col-sm-12">
+                    <div className="card">
+                        <div className="body">
+                            <div className="row clearfix">
+                                <div className="col-7">
+                                    <h5 className="mb-0">{acount}</h5>
+                                    <small className="text-muted">Acceptance</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div className="col-xl-3 col-lg-6 col-md-6 col-sm-12">
+                    <div className="card">
+                        <div className="body">
+                            <div className="row clearfix">
+                                <div className="col-7">
+                                    <h5 className="mb-0">{dcount}</h5>
+                                    <small className="text-muted">Declines</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div className="input-group mb-3">
+                <input style={{width: 200}} value={search} onChange={(e) => setSearch(e.target.value)} type="text" placeholder="Search Value" aria-label="Recipient's username" aria-describedby="basic-addon2" />
+                
+                <select style={{width: 200, marginLeft: 25}} value={type} onChange={(e) => setType(e.target.value)} id="inputGroupSelect01">
+					<option value={"all"}>All Drivers</option>
+					<option value={"_id"}>Ref No</option>
+                    <option value={"DriverFirstName"}>Driver First Name</option>
+					<option value={"DriverLastName"}>Driver Last Name</option>
+					<option value={"driverName"}>Driver Email</option>
+                </select>
+                <Button style={{marginLeft: 25}} variant="primary" onClick={() => searchData(type, search)}>Seacrch</Button>
+            </div>
+
+            {view ?
+                <div className="row clearfix">
+                    <div className="col-lg-12 col-md-12">
+                        {bookings.map((booking) => (
+                            <Card style={{ fontSize: 16 }} key={booking._id} >
+                                <Card.Header className="text-center">Client Name : {booking.client}</Card.Header>
+								<Card.Header className="text-center">Client Email : {booking.email}</Card.Header>
+                                <Card.Header className="text-center">Refernce No : {booking._id}</Card.Header>
+                                <Card.Body className="text-center">
+                                    <Card.Title>Booking Date : {booking.date.split("T")[0]}    Delivery Date : {booking.DelDate.split("T")[0]}</Card.Title>
+                                    <Card.Text className="text-left">
+                                        Driver Email : {booking.driverName}
+                                    </Card.Text>
+                                    <Card.Text className="text-left">
+                                        Departure Address : {booking.fromAddress}
+                                    </Card.Text>
+                                    <Card.Text className="text-left">
+                                        Designation Address : {booking.toAddress}
+                                    </Card.Text>
+                                    <Card.Text className="text-left">
+                                        Booking Time : {booking.time}
+                                    </Card.Text>
+                                    <Card.Text className="text-left">
+                                        Booking Delivery Time : {booking.endTime}
+                                    </Card.Text>
+                                    <Card.Text className="text-left">
+                                        No Of People Required : {booking.peopleReq}
+                                    </Card.Text>
+                                    <Card.Text className="text-left">
+                                        Special Requirements : {booking.specialReq}
+                                    </Card.Text>
+                                    <Card.Text className="text-left">
+                                        Message : {booking.message}
+                                    </Card.Text>
+									<Card.Text className="text-left">
+                                        Status : {booking.accepted ? "Accepted" : "Declined"}
+                                    </Card.Text>
+                                    <Card.Text style={{ display: 'inline-block', marginTop: '-320px' }} className="text-right">
+                                        <b><u>Items to Be Moved</u></b> {booking.items.map((item) => (
+                                            <Card.Text>
+                                                {item}
+                                            </Card.Text>
+                                        ))}
+                                    </Card.Text>
+                                </Card.Body>
+                                <Card.Footer><Button style={{margin:25}} variant="primary" onClick={() => viewData("Calender",booking.driverName)}>View Driver Calender</Button><Button style={{margin:25}} onClick={() => viewData("Email",booking.driverName)} variant="primary">View Driver Email</Button></Card.Footer>
+                            </Card>
+                        ))}
+                    </div>
+                </div> :
+                <FormsBasic />
+            }
+        </div>
+    );
 
 }
 export default AllDriver

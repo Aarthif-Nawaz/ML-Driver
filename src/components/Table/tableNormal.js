@@ -192,20 +192,10 @@ const TableNormal = () => {
 
 					<div className="col-lg-12">
 						<div className="card">
-							<div className="header">
-								<h2>Basic Table <small>Basic example without any additional modification classes</small></h2>
-							</div>
 							<div className="body">
 								<div className="table-responsive">
 									<table className="table">
-										<thead>
-											<tr>
-												<th>#</th>
-												<th>FIRST NAME</th>
-												<th>LAST NAME</th>
-												<th>USERNAME</th>
-											</tr>
-										</thead>
+
 										<tbody>
 											<tr>
 												<td>1</td>

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { getDriverBookings, updateBooking } from '../../service'
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
+import {Card, Button} from 'react-bootstrap'
 toast.configure();
 function Dashboard4(props) {
     const [bookings, setBookings] = useState([])
@@ -57,34 +57,44 @@ function Dashboard4(props) {
         <div className="container-fluid">
             <div className="row clearfix">
                 <div className="col-lg-12 col-md-12">
-                    <div className="table-responsive">
-                        <table className="table table-hover table-custom spacing5">
-                            <thead>
-                                <tr>
-                                    <th>Client Name</th>
-                                    <th>Client Email</th>
-                                    <th>From Address</th>
-                                    <th>To Address</th>
-                                    <th>Date</th>
-                                    <th>Time</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {bookings.length > 0 ? bookings.map((booking) => (
-                                    <tr>
-                                        <td>{booking.client}</td>
-                                        <td>{booking.email}</td>
-                                        <td>{booking.fromAddress}</td>
-                                        <td>{booking.toAddress}</td>
-                                        <td>{booking.date.split("T")[0]}</td>
-                                        <td>{booking.time}</td>
-                                        <td>{booking.clicked ? (booking.accepted ? "Accepted" : "Declined") : <><button onClick={() => accept(booking._id)} style={{ width: 70, backgroundColor: 'green', color: 'white' }}>Accept</button><button onClick={() => decline(booking._id)} style={{ width: 70, marginLeft: 20, backgroundColor: 'red', color: 'white' }}>Decline</button></>}</td>
-                                    </tr>
-                                )) : <></>}
-                            </tbody>
-                        </table>
-                    </div>
+                {bookings.map((booking) => (
+							<Card style={{ fontSize: 16 }} key={booking._id} >
+								<Card.Header className="text-center">Client Name : {booking.client} ,  Client Email : {booking.email}</Card.Header>
+								<Card.Header className="text-center">Refernce No : {booking._id}</Card.Header>
+                                <Card.Body className="text-center">
+									<Card.Title >Booking Date : {booking.date.split("T")[0]}    Delivery Date : {booking.DelDate.split("T")[0]}</Card.Title>
+									<Card.Text style={{marginTop:20}} className="text-left">
+										Departure Address : {booking.fromAddress}
+									</Card.Text>
+									<Card.Text className="text-left">
+										Designation Address : {booking.toAddress}
+									</Card.Text>
+									<Card.Text className="text-left">
+										Booking Time : {booking.time}
+									</Card.Text>
+									<Card.Text className="text-left">
+										Booking Delivery Time : {booking.endTime}
+									</Card.Text>
+									<Card.Text className="text-left">
+										No Of People Required : {booking.peopleReq}
+									</Card.Text>
+									<Card.Text className="text-left">
+										Special Requirements : {booking.specialReq}
+									</Card.Text>
+									<Card.Text className="text-left">
+										Message : {booking.message}
+									</Card.Text>
+									<Card.Text style={{ display: 'inline-block', marginTop: '-320px' , marginLeft: 450}} className="text-right">
+										<b><u>Items to Be Moved</u></b> {booking.items.map((item) => (
+											<Card.Text>
+												{item}
+											</Card.Text>
+										))}
+									</Card.Text>
+								</Card.Body>
+								<Card.Footer><Button variant="primary">Print Invoice [PDF]</Button>{booking.clicked ? (booking.accepted ? <p style={{fontWeight:'bold', marginLeft:20}}>Accepted</p> : <p style={{fontWeight:'bold', marginLeft:20}}>Declined</p>) : <><Button variant="primary" onClick={() => accept(booking._id)} style={{ width: 100, backgroundColor: 'green', color: 'white', marginLeft:20 }}>Accept</Button><Button variant="primary" onClick={() => decline(booking._id)} style={{ width: 100, marginLeft: 20, backgroundColor: 'red', color: 'white' }}>Decline</Button></>}</Card.Footer>
+							</Card>
+						))}
                 </div>
             </div>
         </div>

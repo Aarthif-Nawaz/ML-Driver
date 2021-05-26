@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { getDriverBookings } from '../../service'
+import {useLocation} from 'react-router-dom'
 
-function DriverInbox() {
+function DriverInbox(props) {
     const [bookings, setBookings] = useState([])
+    const location = useLocation()
+    const [email,setEmail] = useState(location.state ? props.location.state.email : localStorage.getItem('email'))
 
     const fetchData = async () => {
         let darr = []
-        const data = await getDriverBookings(localStorage.getItem('email'))
+        const data = await getDriverBookings(email)
         if (data.result != "No Data") {
             for (let index = 0; index < data.result.length; index++) {
                 darr.push(data.result[index])
@@ -19,6 +22,13 @@ function DriverInbox() {
 
 
     useEffect(() => {
+        try{
+            if(props.location.state.email){
+                setEmail(props.location.state.email)
+            }
+        }catch(e){
+            console.log(e)
+        }
         fetchData()
     }, [])
 

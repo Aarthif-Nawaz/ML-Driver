@@ -10,7 +10,7 @@ import tippy from 'tippy.js';
 import 'tippy.js/dist/tippy.css';
 
 
-function DriverFullcalender() {
+function DriverFullcalender(props) {
     const history = useHistory();
     const headerdata = {
         left: 'title', // you can add today btn
@@ -39,7 +39,7 @@ function DriverFullcalender() {
             to: "",
             time:""
         }
-        const data = await getDriverBookings(localStorage.getItem('email'))
+        const data = await getDriverBookings(props.email ? props.email : localStorage.getItem('email'))
         console.log(data.result)
         for (let index = 0; index < data.result.length; index++) {
             if (data['result'][index].message == arg.event.title && data['result'][index]._id == arg.event.id){
@@ -71,7 +71,7 @@ function DriverFullcalender() {
 
     const fetchData = async () => {
         let darr = []
-        const data = await getDriverBookings(localStorage.getItem('email'))
+        const data = await getDriverBookings(props.email ? props.email : localStorage.getItem('email'))
         if (data.result != "No Data") {
             for (let index = 0; index < data.result.length; index++) {
                 var date = data.result[index].date.split("T")[0].split("-")

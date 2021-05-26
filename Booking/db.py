@@ -196,11 +196,17 @@ def createPlan(details):
     return db.Planners.insert_one({
         'email': details['email'],
         'driverName': details['driver'],
+        'items': details['items'],
         'client': details['client'],
+        'data': details['data'],
         'fromAddress': details['fromAddress'],
         'toAddress': details['toAddress'],
         'date': details['date'],
+        'DelDate': details['DelDate'],
         'time': details['time'],
+        'endTime': details['endTime'],
+        'peopleReq': details['peopleReq'],
+        'specialReq': details['specialReq'],
         'message': details['message'],
         'accepted': False
     })
@@ -218,6 +224,55 @@ def updatePlan(details):
         }
     )
 
+def searchData(type,value):
+    if type == "firstName":
+        email = list(db.Users.find({'firstName': value}))
+        datas = []
+        for i in email:
+            data = list(db.Planners.find({'email': i['email']}))
+            stringify_object_id(data)
+            if data:
+                return data
+    elif type == "lastName":
+        email = list(db.Users.find({'lastName': value}))
+        datas = []
+        for i in email:
+            data = list(db.Planners.find_one({'email': i['email']}))
+            stringify_object_id(data)
+            if data:
+                return data
+    elif type == "DriverFirstName":
+        email = list(db.Users.find({'firstName': value}))
+        datas = []
+        for i in email:
+            data = list(db.Planners.find_one({'driverName': i['email']}))
+            stringify_object_id(data)
+            if data:
+                return data
+    elif type == "DriverLastName":
+        email = list(db.Users.find({'lastName': value}))
+        datas = []
+        for i in email:
+            data = list(db.Planners.find_one({'driverName': i['email']}))
+            stringify_object_id(data)
+            if data:
+                return data
+    elif type == "_id":
+        data = list(db.Planners.find({'_id': ObjectId(value)}))
+        stringify_object_id(data)
+        if data:
+            return data
+    elif type == "driverName":
+        data = list(db.Planners.find({'driverName': value}))
+        stringify_object_id(data)
+        if data:
+            return data
+    else:
+        data = list(db.Planners.find({'email': value}))
+        stringify_object_id(data)
+        if data:
+            return data
+
 def updatePlanDetails(details):
     return db.Planners.update_one(
         {
@@ -226,11 +281,17 @@ def updatePlanDetails(details):
         {
             "$set": {
                 'driverName': details['driver'],
+                'items': details['items'],
                 'client': details['client'],
+                'data': details['data'],
                 'fromAddress': details['fromAddress'],
                 'toAddress': details['toAddress'],
                 'date': details['date'],
+                'DelDate': details['DelDate'],
                 'time': details['time'],
+                'endTime': details['endTime'],
+                'peopleReq': details['peopleReq'],
+                'specialReq': details['specialReq'],
                 'message': details['message']
             }
         }

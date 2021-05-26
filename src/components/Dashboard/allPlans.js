@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import FormsBasic from '../Form/formsBasic'
-import { getAllBookings, getBookings } from '../../service'
+import { getAllBookings, searchPlannerBookings } from '../../service'
+import { Card, Button } from 'react-bootstrap'
+import {useHistory} from 'react-router-dom'
 
 function AllPlans() {
     const [view, setView] = useState(true)
@@ -10,38 +12,66 @@ function AllPlans() {
     const [dcount, setDdcount] = useState(0);
     const [res, setRes] = useState(0)
     const [plans, setPlans] = useState([])
+    const [search, setSearch] = useState('')
+    const [type, setType] = useState('_id')
 
-    const searchData = async(value) => {
+    const history = useHistory()
+
+    const viewData = (type,email) => {
+        if (type == "Calender"){
+            history.push({
+                pathname: '/plan-calender',
+                state: {email: email}
+            })
+        }
+        else{
+            history.push({
+                pathname: '/planner-inbox',
+                state: {email: email}
+            })
+        }
+    }
+
+    const searchData = async (type, value) => {
         console.log(value)
         let darr = []
         let a = 0
         let c = 0
-        try {
-            const data = await getBookings(value)
-            if (data.result != "No Data") {
-                setRes(data.result.length)
-                for (let index = 0; index < data.result.length; index++) {
-                    if (data.result[index].accepted) {
-                        a +=1
-                    }
-                    if (!data.result[index].accepted) {
-                        c +=1
-                    }
-                    darr.push(data.result[index])
-
-                }
-                setBookings([...darr])
-                setDacount(a)
-                setDdcount(c)
-            }
-            else {
-                setRes(0)
-            }
-
-        } catch (e) {
-            console.log(e)
+        if (type == "all"){
+            fetchData()
         }
-
+        else{
+            try {
+                const data = await searchPlannerBookings(type,value)
+                if (data.result != "No Data") {
+                    console.log(data.result)
+                    setRes(data.result.length)
+                    for (let index = 0; index < data.result.length; index++) {
+                        if (data.result[index].accepted) {
+                            a += 1
+                        }
+                        if (!data.result[index].accepted) {
+                            c += 1
+                        }
+                        darr.push(data.result[index])
+    
+                    }
+                    setBookings([...darr])
+                    setDacount(a)
+                    setDdcount(c)
+                }
+                else {
+                    setRes(0)
+                    setBookings([])
+                    setDacount(0)
+                    setDdcount(0)
+                }
+    
+            } catch (e) {
+                console.log(e)
+            }
+        }
+        
     }
 
     const fetchData = async () => {
@@ -74,9 +104,6 @@ function AllPlans() {
 
 
     }
-
-
-
 
     useEffect(() => {
         fetchData()
@@ -157,46 +184,67 @@ function AllPlans() {
                     </div>
                 </div>
             </div>
-            <div className="input-group mb-3">
-                <div className="input-group-prepend">
-                    <label className="input-group-text" htmlFor="inputGroupSelect01">Planner</label>
-                </div>
-                <select onChange={(e) => searchData(e.target.value)} className="custom-select" id="inputGroupSelect01">
-                    {plans.map((plan) => (
-                        <option value={plan}>{plan}</option>
-                    ))}
 
+            <div className="input-group mb-3">
+                <input style={{width: 200}} value={search} onChange={(e) => setSearch(e.target.value)} type="text" placeholder="Search Value" aria-label="Recipient's username" aria-describedby="basic-addon2" />
+                
+                <select style={{width: 200, marginLeft: 25}} value={type} onChange={(e) => setType(e.target.value)} id="inputGroupSelect01">
+                    <option value={"all"}>All Planners</option>
+                    <option value={"_id"}>Ref No</option>
+                    <option value={"firstName"}>Planner First Name</option>
+                    <option value={"lastName"}>Planner Last Name</option>
+                    <option value={"email"}>Planner Email</option>
                 </select>
+                <Button style={{marginLeft: 25}} variant="primary" onClick={() => searchData(type, search)}>Seacrch</Button>
             </div>
+
             {view ?
                 <div className="row clearfix">
                     <div className="col-lg-12 col-md-12">
-                        <div className="table-responsive">
-                            <table className="table table-hover table-custom spacing5">
-                                <thead>
-                                    <tr>
-                                        <th>Driver Email</th>
-                                        <th>From Address</th>
-                                        <th>To Address</th>
-                                        <th>Date</th>
-                                        <th>Time</th>
-                                        <th>Accepted</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {bookings.length > 0 && bookings.map((booking) => (
-                                        <tr>
-                                            <td>{booking.driverName}</td>
-                                            <td>{booking.fromAddress}</td>
-                                            <td>{booking.toAddress}</td>
-                                            <td>{booking.date.split("T")[0]}</td>
-                                            <td>{booking.time}</td>
-                                            <td>{booking.accepted ? "Driver Has Accepted" : "Driver Has Not Accepted Yet"}</td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                        </div>
+                        {bookings.map((booking) => (
+                            <Card style={{ fontSize: 16 }} key={booking._id} >
+                                <Card.Header className="text-center">Client Name : {booking.client}</Card.Header>
+                                <Card.Header className="text-center">Refernce No : {booking._id}</Card.Header>
+                                <Card.Body className="text-center">
+                                    <Card.Title>Booking Date : {booking.date.split("T")[0]}    Delivery Date : {booking.DelDate.split("T")[0]}</Card.Title>
+                                    <Card.Text className="text-left">
+                                        Planner Email : {booking.email}
+                                    </Card.Text>
+                                    <Card.Text className="text-left">
+                                        Driver Email : {booking.driverName}
+                                    </Card.Text>
+                                    <Card.Text className="text-left">
+                                        Departure Address : {booking.fromAddress}
+                                    </Card.Text>
+                                    <Card.Text className="text-left">
+                                        Designation Address : {booking.toAddress}
+                                    </Card.Text>
+                                    <Card.Text className="text-left">
+                                        Booking Time : {booking.time}
+                                    </Card.Text>
+                                    <Card.Text className="text-left">
+                                        Booking Delivery Time : {booking.endTime}
+                                    </Card.Text>
+                                    <Card.Text className="text-left">
+                                        No Of People Required : {booking.peopleReq}
+                                    </Card.Text>
+                                    <Card.Text className="text-left">
+                                        Special Requirements : {booking.specialReq}
+                                    </Card.Text>
+                                    <Card.Text className="text-left">
+                                        Message : {booking.message}
+                                    </Card.Text>
+                                    <Card.Text style={{ display: 'inline-block', marginTop: '-320px' }} className="text-right">
+                                        <b><u>Items to Be Moved</u></b> {booking.items.map((item) => (
+                                            <Card.Text>
+                                                {item}
+                                            </Card.Text>
+                                        ))}
+                                    </Card.Text>
+                                </Card.Body>
+                                <Card.Footer><Button style={{margin:25}} variant="primary" onClick={() => viewData("Calender",booking.email)}>View Planner Calender</Button><Button style={{margin:25}} onClick={() => viewData("Email",booking.email)} variant="primary">View Planner Email</Button></Card.Footer>
+                            </Card>
+                        ))}
                     </div>
                 </div> :
                 <FormsBasic />

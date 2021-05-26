@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { setThemeColor, setFontStyle, setLightTheme, setRtlVersion, setHorizontalMenu, setMiniSidebar, setMiniSidebarMenuOn } from '../../actions/settingsAction';
 
@@ -19,9 +19,12 @@ const ThemeSetting = ({
     miniSideMenuOn,
 }) => {
     const [openSettingBar, setOpenSettingBar] = useState(false)
+
+    
+
     return (
         <div className={`themesetting ${openSettingBar ? " open" : ""}`}>
-            <span className="theme_btn" onClick={() => setOpenSettingBar(!openSettingBar)}><i className="icon-magic-wand"></i></span>
+            
             <div className="card theme_color">
                 <div className="header">
                     <h2>Theme Color</h2>

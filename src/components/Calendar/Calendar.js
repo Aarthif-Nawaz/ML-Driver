@@ -1,9 +1,29 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import { Link } from 'react-router-dom';
 import Fullcalender from '../common/fullcalender';
-import {useHistory} from 'react-router-dom'
+import {useHistory, useLocation} from 'react-router-dom'
+import { propTypes } from 'react-bootstrap/esm/Image';
 
-const Messenger = () => {
+const Messenger = (props) => {
+    const location = useLocation()
+    const val = location.state ? props.location.state.email : localStorage.getItem('email')
+    const [email,setEmail] = useState(val)
+    const [come,setCome] = useState(false)
+    
+    useEffect(() => {
+        try{
+            if(props.location.state.email){
+                console.log(props.location.state.email)
+                setCome(true)
+                setEmail(props.location.state.email)
+            }
+        }catch(e){
+            console.log(e)
+        }
+        
+        
+    },[])
+
     const history = useHistory()
     return (
         <>
@@ -23,7 +43,7 @@ const Messenger = () => {
                     </div>
                 </div>
                 <div className="row clearfix">
-                    <Fullcalender></Fullcalender>
+                    <Fullcalender email={email}></Fullcalender>
                 </div>
             </div>
         </>

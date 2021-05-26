@@ -53,7 +53,7 @@ function Login(){
 				<div className="auth_div vivify popIn">
 					<div className="auth_brand">
 						<Link className="navbar-brand" to="/">
-							<img src="../assets/images/icon.svg" width="30" height="30" className="d-inline-block align-top mr-2" alt="Oculux logo" />Booking System</Link>
+							<img src="../assets/images/icon.svg" width="30" height="30" className="d-inline-block align-top mr-2" color={"black"} alt="Oculux logo" /><p style={{color: 'black'}}>Booking System</p></Link>
 					</div>
 					<div className="card">
 						<div className="body">

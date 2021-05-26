@@ -9,9 +9,10 @@ import {useHistory} from 'react-router-dom'
 import tippy from 'tippy.js';
 import 'tippy.js/dist/tippy.css';
 
-function Fullcalender() {
-    const history = useHistory();
 
+function Fullcalender(props) {
+    const history = useHistory();
+    
     const headerdata = {
         left: 'title', // you can add today btn
         center: '',
@@ -23,8 +24,9 @@ function Fullcalender() {
     const [bookings,setBookings] = useState([])
 
 	const fetchData = async () => {
+        console.log(props.email)
 		let darr = []
-		const data = await getBookings(localStorage.getItem('email'))
+		const data = await getBookings(props.email ? props.email : localStorage.getItem('email'))
         if (data.result != "No Data") {
             for (let index = 0; index < data.result.length; index++) {
                 var date = data.result[index].date.split("T")[0].split("-")
@@ -86,7 +88,7 @@ function Fullcalender() {
             to: "",
             time:""
         }
-        const data = await getBookings(localStorage.getItem('email'))
+        const data = await getBookings(props.email ? props.email : localStorage.getItem('email'))
         for (let index = 0; index < data.result.length; index++) {
             if (data['result'][index].message == arg.event.title && data['result'][index]._id == arg.event.id){
                 console.log(data['result'][index])

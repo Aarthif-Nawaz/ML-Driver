@@ -4,36 +4,37 @@ import Columnchart from '../common/columnchart';
 import Tooltip from '../common/toolTip';
 import FormsBasic from '../Form/formsBasic'
 import { getBookings } from '../../service'
-
+import { Card, Button } from 'react-bootstrap'
+import { Watermark } from '@hirohe/react-watermark';
 function Dashboard() {
 	const [view, setView] = useState(true)
 	const [bookings, setBookings] = useState([])
-	const [acount,setDacount] = useState(0);
-	const [dcount,setDdcount] = useState(0);
-	const [res,setRes] = useState(0)
+	const [acount, setDacount] = useState(0);
+	const [dcount, setDdcount] = useState(0);
+	const [res, setRes] = useState(0)
 	const fetchData = async () => {
 		let darr = []
 		try {
 			const data = await getBookings(localStorage.getItem('email'))
-			
-			if (data.result != "No Data"){
+
+			if (data.result != "No Data") {
 				setRes(data.result.length)
 				for (let index = 0; index < data.result.length; index++) {
-					if(data.result[index].accepted){
-						setDacount(prevCount => prevCount +1)
+					if (data.result[index].accepted) {
+						setDacount(prevCount => prevCount + 1)
 					}
-					if(!data.result[index].accepted){
-						setDdcount(prevCount => prevCount +1)
+					if (!data.result[index].accepted) {
+						setDdcount(prevCount => prevCount + 1)
 					}
 					darr.push(data.result[index])
-	
+
 				}
 				setBookings([...darr])
 			}
-			else{
+			else {
 				setRes(0)
 			}
-			
+
 		} catch (e) {
 			console.log(e)
 		}
@@ -124,32 +125,49 @@ function Dashboard() {
 			{view ?
 				<div className="row clearfix">
 					<div className="col-lg-12 col-md-12">
-						<div className="table-responsive">
-							<table className="table table-hover table-custom spacing5">
-								<thead>
-									<tr>
-										<th>Driver Email</th>
-										<th>From Address</th>
-										<th>To Address</th>
-										<th>Date</th>
-										<th>Time</th>
-										<th>Accepted</th>
-									</tr>
-								</thead>
-								<tbody>
-									{bookings.length > 0 && bookings.map((booking) => (
-										<tr>
-											<td>{booking.driverName}</td>
-											<td>{booking.fromAddress}</td>
-											<td>{booking.toAddress}</td>
-											<td>{booking.date.split("T")[0]}</td>
-											<td>{booking.time}</td>
-											<td>{booking.accepted ? "Driver Has Accepted" : "Driver Has Not Accepted Yet"}</td>
-										</tr>
-									))}
-								</tbody>
-							</table>
-						</div>
+						{bookings.map((booking) => (
+							<Card style={{ fontSize: 16 }} key={booking._id} >
+								<Card.Header className="text-center">Client Name : {booking.client}</Card.Header>
+								<Card.Header className="text-center">Refernce No : {booking._id}</Card.Header>
+								<Card.Body className="text-center">
+									<Card.Title>Booking Date : {booking.date.split("T")[0]}    Delivery Date : {booking.DelDate.split("T")[0]}</Card.Title>
+									<Card.Text className="text-left">
+										Driver Email : {booking.driverName}
+									</Card.Text>
+									<Card.Text className="text-left">
+										Departure Address : {booking.fromAddress}
+									</Card.Text>
+									<Card.Text className="text-left">
+										Designation Address : {booking.toAddress}
+									</Card.Text>
+									<Card.Text className="text-left">
+										Booking Time : {booking.time}
+									</Card.Text>
+									<Card.Text className="text-left">
+										Booking Delivery Time : {booking.endTime}
+									</Card.Text>
+									<Card.Text className="text-left">
+										No Of People Required : {booking.peopleReq}
+									</Card.Text>
+									<Card.Text className="text-left">
+										Special Requirements : {booking.specialReq}
+									</Card.Text>
+									<Card.Text className="text-left">
+										Message : {booking.message}
+									</Card.Text>
+									<Card.Text style={{ display: 'inline-block', marginTop: '-320px' }} className="text-right">
+										<b><u>Items to Be Moved</u></b> {booking.items.map((item) => (
+											<Card.Text>
+												{item}
+											</Card.Text>
+										))}
+									</Card.Text>
+								</Card.Body>
+								<Card.Footer><Button variant="primary">Print Invoice [PDF]</Button>{booking.accepted ? <p style={{fontWeight:'bold', marginLeft:20}}>Accepted</p> :<p style={{fontWeight:'bold', marginLeft:20}}>Declined</p>}</Card.Footer>
+								
+							</Card>
+						))}
+
 					</div>
 				</div> :
 				<FormsBasic />

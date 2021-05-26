@@ -72,6 +72,17 @@ export const getAllBookings = () => {
     })
 }
 
+export const searchPlannerBookings = (type,value) => {
+    var requestOptions = {
+        method: 'GET',
+    };
+    return fetch(BASE_URL+`/fetchPlannerBookings/${type}/${value}`, requestOptions)
+    .then(response => response.json())
+    .then(data => {
+        return data
+    })
+}
+
 export const userDelete = (payload) => {
     var requestOptions = {
         method: 'DELETE',
