@@ -192,7 +192,6 @@ function AllPlans() {
                     <option value={"all"}>All Planners</option>
                     <option value={"_id"}>Ref No</option>
                     <option value={"firstName"}>Planner First Name</option>
-                    <option value={"lastName"}>Planner Last Name</option>
                     <option value={"email"}>Planner Email</option>
                 </select>
                 <Button style={{marginLeft: 25}} variant="primary" onClick={() => searchData(type, search)}>Seacrch</Button>

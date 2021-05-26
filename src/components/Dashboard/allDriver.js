@@ -196,7 +196,6 @@ function AllDriver() {
 					<option value={"all"}>All Drivers</option>
 					<option value={"_id"}>Ref No</option>
                     <option value={"DriverFirstName"}>Driver First Name</option>
-					<option value={"DriverLastName"}>Driver Last Name</option>
 					<option value={"driverName"}>Driver Email</option>
                 </select>
                 <Button style={{marginLeft: 25}} variant="primary" onClick={() => searchData(type, search)}>Seacrch</Button>
